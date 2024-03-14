@@ -1,0 +1,15 @@
+# General options
+run parallel  # run all stress tests in sequence
+metrics
+timeout 5s
+
+# -------------------------------------------------- #
+# Memory allocate and write stressor
+#
+
+vm 1
+vm-bytes 1m
+vm-keep
+vm-ops 5
+vm-populate
+

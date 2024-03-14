@@ -1,0 +1,33 @@
+# Default values for stress-ng-web.
+
+image:
+  repository: ojha931/stress-ng-web
+  pullPolicy: Always
+  privateRepo: 
+    enabled: false
+    generateSecret: false
+    imagePullSecerts: {}
+    credentials:
+      registry: ""
+      username: ""
+      password: ""
+
+service:
+  type: ClusterIP
+  nodePort: 30001
+
+resources: 
+  limits:
+    cpu: 500m
+    memory: 500Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 55
+  targetMemoryUtilizationPercentage: 60
+

@@ -1,0 +1,13 @@
+# General options
+run parallel  # run all stress tests in sequence
+metrics
+timeout 5s
+
+# -------------------------------------------------- #
+#  IO mixing stressor
+#
+
+iomix 1
+iomix-bytes 1024
+iomix-ops 5
+

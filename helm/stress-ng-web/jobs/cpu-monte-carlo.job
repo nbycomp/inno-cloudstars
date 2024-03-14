@@ -1,0 +1,12 @@
+# General options
+run parallel  # run all stress tests in sequence
+metrics
+timeout 5s
+
+# -------------------------------------------------- #
+#  Monte Carlo computations
+#
+
+monte-carlo 1
+monte-carlo-ops 5
+monte-carlo-samples 100000

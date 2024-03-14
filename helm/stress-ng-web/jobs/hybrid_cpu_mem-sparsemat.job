@@ -1,0 +1,16 @@
+# General options
+run parallel  # run all stress tests in sequence
+metrics
+timeout 5s
+
+
+# -------------------------------------------------- #
+#  Sparse matrix stressor
+#  - cpu 
+#  - memory
+#
+
+sparsematrix 1
+sparsematrix-items 100
+sparsematrix-ops 5
+sparsematrix-size 10

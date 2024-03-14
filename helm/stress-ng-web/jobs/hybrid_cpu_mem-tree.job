@@ -1,0 +1,15 @@
+# General options
+run parallel  # run all stress tests in sequence
+metrics
+timeout 5s
+
+
+# -------------------------------------------------- #
+#  Tree data structures stressor
+#  - cpu
+#  - memory
+#
+
+tree 1
+tree-ops 5
+tree-size 1000

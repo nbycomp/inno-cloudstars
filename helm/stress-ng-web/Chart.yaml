@@ -1,0 +1,6 @@
+apiVersion: v2
+name: stress-ng-web
+description: A Helm chart for K8s testing environment
+type: application
+version: 0.2.2
+appVersion: "v1.0"

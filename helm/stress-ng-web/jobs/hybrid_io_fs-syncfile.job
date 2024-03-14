@@ -1,0 +1,15 @@
+# General options
+run parallel  # run all stress tests in sequence
+metrics
+timeout 5s
+
+
+# -------------------------------------------------- #
+# Partial file synching (sync_file_range) Stressor
+# - Filesystem
+# - IO
+#
+
+sync-file 1
+sync-file-bytes 1m
+sync-file-ops 5

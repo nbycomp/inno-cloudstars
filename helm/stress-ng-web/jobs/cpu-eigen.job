@@ -1,0 +1,11 @@
+# General options
+run sequential  # run all stress tests in sequence 
+metrics
+timeout 5s
+
+# -------------------------------------------------- #
+# Eigen stresser
+#
+eigen 1
+eigen-ops 3
+eigen-size 4

@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "k6-job.fullname" . }}
+  labels:
+    {{- include "k6-job.labels" . | nindent 4 }}
+spec:
+  template:
+    metadata:
+      name: {{ .Release.Name | quote }}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: k6-script-job
+          image: {{ .Values.image.repository | default "ojha931/k6-test" }}:{{ .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/app/k6", "run", "/app/script.js"]
+          volumeMounts:
+            - name: config
+              mountPath: /app/script.js
+              subPath: script.js
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "k6-job.fullname" . }}
+      {{- with .Values.image.privateRepo }}
+      {{- if and .enabled .generateSecret }}
+      imagePullSecrets:
+        - name: {{ include "k6-job.name" $ }}-registry-key
+      {{- else if .enabled }}
+      {{ $secret := .imagePullSecrets | required ".Values.image.privateRepo.imagePullSecrets is required for private repo" }}
+      imagePullSecrets:
+        {{- toYaml $secret | nindent 8 }}
+      {{- end }}
+      {{- end }}
+

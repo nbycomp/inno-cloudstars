@@ -1,0 +1,14 @@
+# General options
+run parallel  # run all stress tests in sequence
+metrics
+timeout 5s
+
+# -------------------------------------------------- #
+#  JPEG compression stressor
+#
+
+jpeg 1
+jpeg-height 256
+jpeg-width 256
+jpeg-ops 5
+jpeg-quality 90

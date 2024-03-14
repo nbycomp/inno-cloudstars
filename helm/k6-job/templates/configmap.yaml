@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "k6-job.fullname" . }}
+  labels:
+    {{- include "k6-job.labels" . | nindent 4 }}
+data:
+  script.js: |-
+    import http from 'k6/http';
+    import { sleep } from 'k6';
+    import { normalDistributionStages, randomItem } from 'https://jslib.k6.io/k6-utils/1.2.0/index.js'
+
+    // For further configurations
+    // k6-docs: https://k6.io/docs/using-k6/http-requests/
+
+    // --------------------------------------------------
+    // VU options
+    // https://k6.io/docs/using-k6/k6-options/how-to/
+    // --------------------------------------------------
+    //
+
+    {{- if .Values.custom.options.enabled }}
+    export const options = {{ .Values.custom.options.value }};
+    {{- else }}
+    export const options = {
+      // number of requests per host at a time
+      batch: {{ .Values.options.batch }},
+
+      // Alters the number of VUs from 1 to {{ .Values.options.normalDist.max }}, over a period
+      // of {{ .Values.options.normalDist.timePeriod }} seconds, comprised of {{ .Values.options.normalDist.stages }} stages
+      stages: normalDistributionStages(
+        {{ .Values.options.normalDist.max }}, 
+        {{ .Values.options.normalDist.timePeriod }}, 
+        {{ .Values.options.normalDist.stages}}
+      ),
+
+      // Request SLA
+      // https://k6.io/docs/using-k6/thresholds/
+      thresholds: {
+        http_req_duration: [{ 
+          threshold: {{ .Values.options.http_req_dur.value | quote }}, 
+          abortOnFail: {{ .Values.options.http_req_dur.abortOnFail }}  
+        }],
+        http_req_failed: [{ 
+          threshold: {{ .Values.options.http_req_failed.value | quote }}, 
+          abortOnFail: {{ .Values.options.http_req_failed.abortOnFail }} 
+        }],
+      }
+    };
+    {{- end }}
+
+    // --------------------------------------------------
+    // VU logic
+    // --------------------------------------------------
+    //
+
+    export default function() {
+
+      {{- if .Values.custom.vu_logic.enabled }}
+      {{ .Values.custom.vu_logic.value }}
+      {{- else }}
+      {{ $host := .Values.vu.host | required "IP and NodePort for ng-stress is required in .Values.vu.host"}}
+      // IP and nodeport of the ngstress application
+      const host = {{ $host | quote }};
+      const job = {{ .Values.vu.job | quote }};
+
+      http.post(`${host}/jobs/${job}.job`);
+
+      sleep({{ .Values.vu.sleep_dur }});
+      {{- end }}
+    }
+     

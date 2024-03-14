@@ -1,0 +1,6 @@
+apiVersion: v2
+name: k6-job
+description: A Helm chart for K8s testing environment
+type: application
+version: 0.3.4
+appVersion: "v1.0"

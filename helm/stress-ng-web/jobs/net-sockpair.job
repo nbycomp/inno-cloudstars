@@ -1,0 +1,11 @@
+# General options
+run parallel  # run all stress tests in sequence
+metrics
+timeout 5s
+
+# -------------------------------------------------- #
+#  Socket I/O stressor
+#
+
+sockpair 1
+sockpair-ops 5

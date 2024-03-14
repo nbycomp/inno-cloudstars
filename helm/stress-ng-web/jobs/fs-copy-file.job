@@ -1,0 +1,10 @@
+metrics
+timeout 5s
+
+# -------------------------------------------------- #
+# Copy file stressor
+#
+
+copy-file 1
+copy-file-bytes 1m
+copy-file-ops 5

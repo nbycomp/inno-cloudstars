@@ -1,0 +1,15 @@
+# General options
+run parallel  # run all stress tests in sequence
+metrics
+timeout 5s
+
+
+# -------------------------------------------------- #
+#  Judy array stressor
+#  - cpu
+#  - memory
+#
+
+judy 1
+judy-ops 5
+judy-size 1024

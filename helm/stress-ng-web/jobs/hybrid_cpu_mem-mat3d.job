@@ -1,0 +1,15 @@
+# General options
+run parallel  # run all stress tests in sequence
+metrics
+timeout 5s
+
+
+#-------------------------------------------------- #
+#  3D Matrix stressor
+#  - cpu
+#  - memory
+#
+
+matrix-3d 1
+matrix-3d-ops 5
+matrix-3d-size 16

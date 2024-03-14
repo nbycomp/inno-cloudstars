@@ -1,0 +1,11 @@
+# General options
+run parallel  # run all stress tests in sequence
+metrics
+timeout 5s
+
+# -------------------------------------------------- #
+# Asynchronous I/O stressor
+#
+aio 1
+aio-ops 5
+aio-requests 16

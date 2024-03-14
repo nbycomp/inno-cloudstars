@@ -1,0 +1,39 @@
+# Options for k6
+
+image:
+  repository: ojha931/k6-job
+  pullPolicy: Always
+  privateRepo: 
+    enabled: false
+    generateSecret: false
+    imagePullSecerts: {}
+    credentials:
+      registry: ""
+      username: ""
+      password: ""
+
+options:
+  batch: 5
+  normalDist:
+    max: 500
+    timePeriod: 120
+    stages: 100
+  http_req_dur:
+    value: "p(90) < 5000"
+    abortOnFail: false
+  http_req_failed:
+    value: "rate<0.01"
+    abortOnFail: false
+    
+vu:
+  host: ""
+  job: cpu-crypt
+  sleep_dur: 1
+
+custom:
+  options:
+    enabled: false
+    value:  "{ batch: 5, str: 'value' }"
+  vu_logic:
+    enabled: false
+    value: ""
