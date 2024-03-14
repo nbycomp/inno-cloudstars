@@ -6,7 +6,7 @@ image:
   privateRepo: 
     enabled: false
     generateSecret: false
-    imagePullSecerts: {}
+    imagePullSecrets: {}
     credentials:
       registry: ""
       username: ""
