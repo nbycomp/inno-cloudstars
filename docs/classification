@@ -1,0 +1,52 @@
+----------xxxxx----------
+
+Pure Algorithms
+Class          Algorithm      
+cpu            tsc syncload factor crypt waitcpu uprobe cpu cpu-online longjmp funccall jpeg vecshuf getrandom rseq plugin cache fp mpfr hash trig l1cache nop vecmath fp-error ipsec-mb funcret smi af-alg far-branch peterson regs vnni branch flushcache secretmem icache llc-affinity eigen vecwide rdrand monte-carlo rotate goto priv-instr vecfp cacheline fma ioport x86cpuid opcode dekker
+filesystem     chattr fsize dirdeep chdir fanotify eventfd bind-mount iomix flock handle chown procfs rename ioprio lockofd mknod lockf fallocate file-ioctl copy-file link dirmany dnotify locka fiemap access verity inode-flags chmod dir fcntl filename touch dup open getdent io binderfs dentry fpunch fstat lease metamix acl utime inotify xattr symlink
+memory         pageswap memrate oom-pipe dev-shm stack mmapmany userfaultfd full tlb-shootdown mprotect pipeherd madvise mmaphuge env mlockmany mmapfiles memthrash bad-altstack msync mmap vma resources munmap mcontend pipe msyncmany vm-rw remap pagemove physpage vm tmpfs rmap shm shm-sysv vm-splice brk bigheap mmapfork mremap zero mincore randlist stackmmap mmapaddr mmapfixed vm-segv mlock memfd swap vm-addr null
+network        sockabuse sctp sock epoll sockmany udp rawpkt netdev sockfd udp-flood rawsock rawudp ping-sock dccp sockdiag tun icmp-flood sockpair
+io             revio io-uring readahead rawdev seek aio aiol
+----------xxxxx----------
+
+----------xxxxx----------
+
+Hybrid Algorithms
+Class          Algorithm      
+wcs            cpu memory     
+matrix         cpu memory     
+list           cpu memory     
+judy           cpu memory     
+heapsort       cpu memory     
+zlib           cpu memory     
+lsearch        cpu memory     
+shellsort      cpu memory     
+atomic         cpu memory     
+qsort          cpu memory     
+numa           cpu memory     
+prefetch       cpu memory     
+hsearch        cpu memory     
+context        cpu memory     
+sparsematrix   cpu memory     
+radixsort      cpu memory     
+matrix-3d      cpu memory     
+tsearch        cpu memory     
+str            cpu memory     
+tree           cpu memory     
+skiplist       cpu memory     
+stream         cpu memory     
+bsearch        cpu memory     
+mergesort      cpu memory     
+lockbus        cpu memory     
+memcpy         cpu memory     
+membarrier     cpu memory     
+misaligned     cpu memory     
+malloc         cpu memory     
+hdd            filesystem io  
+sync-file      filesystem io  
+----------xxxxx----------
+
+
+
+total: 207 | pure: 176 | hybrid: 31
+
