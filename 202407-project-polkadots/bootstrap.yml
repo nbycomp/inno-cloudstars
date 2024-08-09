@@ -1,0 +1,159 @@
+﻿---
+# This file sets up a single-node kubernetes cluster with kubeadm. Useful for testing Opencraft kubernetes deployments
+# Expects to run on a fresh Ubuntu 22.04 LTS image
+# Example on how to run: ansible-playbook -i "<ip>," bootstrap.yml --key-file <path-to-key> 
+- hosts: all
+  remote_user: ubuntu
+  become: true
+  gather_facts: true
+  vars:
+    deb_architecture: { "armv6l": "armhf", "armv7l": "armhf", "aarch64": "arm64", "x86_64": "amd64", "i386": "i386" }
+  tasks:
+    - name: Disable swap space
+      block:
+        - name: Disable swap
+          command: swapoff -a
+        - name: Make sure swap is disabled even after reboot
+          command: sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+      when: ansible_swaptotal_mb > 0
+    - name: Enable IPv4 packet forwarding
+      block:
+        - name: Enable IPv4 packet forwarding
+          copy:
+            dest: /etc/sysctl.d/k8s.conf
+            content: |
+              net.ipv4.ip_forward = 1
+          register: enable_ipv4_forwarding
+        - name: Apply sysctl params without reboot
+          shell: |
+            sysctl --system
+          when: enable_ipv4_forwarding.changed
+    - name: Install and configure containerd
+      block:
+        - name: Uninstall old versions
+          apt:
+            name:
+              - docker.io
+              - docker-doc
+              - docker-compose
+              - docker-compose-v2
+              - podman-docker
+              - containerd
+              - runc
+            state: absent
+        - name:  Install ca-certificates and curl
+          apt:
+            name:
+              - ca-certificates
+              - curl
+            state: present
+            update_cache: true
+        - name: Create keyrings directory
+          file:
+            path: /etc/apt/keyrings
+            state: directory
+            mode: "755"
+        - name: Get Docker gpg key
+          get_url:
+            url: https://download.docker.com/linux/ubuntu/gpg
+            dest: /etc/apt/keyrings/docker.asc
+            mode: "a+r"
+        - name: Add Docker apt repo
+          apt_repository:
+            repo: "deb [arch={{ deb_architecture[ansible_architecture] }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+            filename: docker
+            state: present
+        - name: Install Docker packages
+          apt:
+            name:
+              - docker-ce
+              - docker-ce-cli
+              - containerd.io
+              - docker-buildx-plugin
+              - docker-compose-plugin
+            state: present
+            update_cache: true
+        - name: Update containerd config
+          copy:
+            dest: /etc/containerd/config.toml
+            content: |
+              version = 2
+              [plugins."io.containerd.grpc.v1.cri"]
+                sandbox_image = "registry.k8s.io/pause:3.9"
+                  [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+                    runtime_type = "io.containerd.runc.v2"
+                      [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+                        SystemdCgroup = true
+          register: updated_containerd_config
+        - name: (Re)start containerd
+          systemd_service:
+            name: containerd
+            state: "{{ 'restarted' if updated_containerd_config.changed else 'started' }}"
+    - name: Install kubeadm, kubelet, and kubectl
+      block:
+        - name: Install dependencies
+          apt:
+            name:
+              - apt-transport-https
+              - ca-certificates
+              - curl
+              - gpg
+            state: present
+            update_cache: true
+        - name: Get key for Kubernetes repository
+          get_url:
+            url: https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key
+            dest: /etc/apt/keyrings/kubernetes-apt-keyring.asc
+            mode: "a+r"
+        - name: Add Kubernetes apt repository
+          apt_repository:
+            repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /"
+            filename: kubernetes
+            state: present
+        - name: Install kubelet kubeadm kubectl
+          apt:
+            name:
+              - kubelet
+              - kubeadm
+              - kubectl
+            state: present
+            update_cache: true
+        - name: Pin versions of kubelet kubeadm kubectl to prevent upgrades
+          dpkg_selections:
+            name: "{{ item }}"
+            selection: hold
+          loop:
+            - kubelet
+            - kubeadm
+            - kubectl
+        - name: Enable kubelet service
+          systemd_service:
+            name: kubelet
+            enabled: true
+            state: started
+    - name: Reset Kubernetes cluster
+      block:
+        - name: Reinitialize Kubernetes
+          shell: |
+            # Remove kube cluster
+            kubeadm reset -f
+            rm -rf /root/.kube
+            rm -rf /home/ubuntu/.kube
+            
+            # Init new cluster
+            kubeadm init
+            
+            # Copy kubectl config for user Ubuntu
+            mkdir -p /home/ubuntu/.kube
+            cp /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
+            chown ubuntu:ubuntu /home/ubuntu/.kube/config
+            
+            # Copy kube config for user root
+            mkdir -p /root/.kube
+            cp /etc/kubernetes/admin.conf /root/.kube/config
+        - name: Install Flannel pod network
+          shell: |
+            kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+        - name: Allow pods on master node
+          shell: |
+            kubectl taint nodes --all node-role.kubernetes.io/control-plane-
