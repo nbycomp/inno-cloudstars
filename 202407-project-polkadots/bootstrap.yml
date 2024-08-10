@@ -1,4 +1,4 @@
-﻿---
+---
 # This file sets up a single-node kubernetes cluster with kubeadm. Useful for testing Opencraft kubernetes deployments
 # Expects to run on a fresh Ubuntu 22.04 LTS image
 # Example on how to run: ansible-playbook -i "<ip>," bootstrap.yml --key-file <path-to-key> 
