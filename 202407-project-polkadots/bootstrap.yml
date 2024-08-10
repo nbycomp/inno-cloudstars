@@ -28,6 +28,11 @@
           shell: |
             sysctl --system
           when: enable_ipv4_forwarding.changed
+    - name: Create keyrings directory
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: "755"
     - name: Install and configure containerd
       block:
         - name: Uninstall old versions
@@ -48,11 +53,6 @@
               - curl
             state: present
             update_cache: true
-        - name: Create keyrings directory
-          file:
-            path: /etc/apt/keyrings
-            state: directory
-            mode: "755"
         - name: Get Docker gpg key
           get_url:
             url: https://download.docker.com/linux/ubuntu/gpg
@@ -89,6 +89,7 @@
           systemd_service:
             name: containerd
             state: "{{ 'restarted' if updated_containerd_config.changed else 'started' }}"
+
     - name: Install kubeadm, kubelet, and kubectl
       block:
         - name: Install dependencies
@@ -131,6 +132,7 @@
             name: kubelet
             enabled: true
             state: started
+
     - name: Reset Kubernetes cluster
       block:
         - name: Reinitialize Kubernetes
@@ -152,8 +154,53 @@
             mkdir -p /root/.kube
             cp /etc/kubernetes/admin.conf /root/.kube/config
         - name: Install Flannel pod network
-          shell: |
-            kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+          command: kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
         - name: Allow pods on master node
-          shell: |
-            kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+          command: kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+
+    - name: Install nvidia driver
+      block:
+        - name: Install nvidia driver
+          apt:
+            name:
+              - nvidia-driver-550
+            state: present
+            update_cache: true
+          register: install_driver
+        - name: Reboot the machine to load nvidia driver
+          reboot: # no args needed
+          when: install_driver.changed
+        - name: Generate X config
+          command: nvidia-xconfig --preserve-busid --enable-all-gpus
+        - name: Get nvidia gpg key
+          get_url:
+            url: https://nvidia.github.io/libnvidia-container/gpgkey
+            dest: /etc/apt/keyrings/nvidia-container-toolkit-keyring.asc
+            mode: "a+r"
+        - name: Add nvidia apt repo
+          apt_repository:
+            repo: "deb [signed-by=/etc/apt/keyrings/nvidia-container-toolkit-keyring.asc] https://nvidia.github.io/libnvidia-container/stable/deb/$(ARCH) /"
+            filename: nvidia-container-toolkit
+            state: present
+        - name: Install nvidia container toolkit
+          apt:
+            name: nvidia-container-toolkit
+            state: present
+        - name: Configure the container runtime by using the nvidia-ctk command
+          command: nvidia-ctk runtime configure --runtime=containerd
+        - name: Restart containerd
+          systemd_service:
+            name: containerd
+            state: restarted
+        - name: Enable k8s-device-plugin daemon set
+          command: kubectl create -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.16.2/deployments/static/nvidia-device-plugin.yml
+
+        - name: Install utils and X dev files
+          apt:
+            name:
+              - mesa-utils  # utilities to test the driver and opengl rendering
+              - libx11-dev  # needed to run Opencraft
+            state: present
+            update_cache: true
+
+
