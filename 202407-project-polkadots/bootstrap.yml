@@ -1,6 +1,6 @@
 ---
 # This file sets up a single-node kubernetes cluster with kubeadm. Useful for testing Opencraft kubernetes deployments
-# Expects to run on a fresh Ubuntu 22.04 LTS image
+# Expects to run on a fresh Ubuntu 24.04 LTS image
 # Example on how to run: ansible-playbook -i "<ip>," bootstrap.yml --key-file <path-to-key> 
 - hosts: all
   remote_user: ubuntu
@@ -143,7 +143,7 @@
             rm -rf /home/ubuntu/.kube
             
             # Init new cluster
-            kubeadm init
+            kubeadm init --pod-network-cidr=10.244.0.0/16
             
             # Copy kubectl config for user Ubuntu
             mkdir -p /home/ubuntu/.kube
@@ -187,7 +187,7 @@
             name: nvidia-container-toolkit
             state: present
         - name: Configure the container runtime by using the nvidia-ctk command
-          command: nvidia-ctk runtime configure --runtime=containerd
+          command: nvidia-ctk runtime configure --runtime=containerd --set-as-default
         - name: Restart containerd
           systemd_service:
             name: containerd
