@@ -158,6 +158,28 @@
         - name: Allow pods on master node
           command: kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
+    - name: Install Helm
+      block:
+        - name: Get key for Helm apt repository
+          get_url:
+            url: https://baltocdn.com/helm/signing.asc
+            dest: /etc/apt/keyrings/helm.asc
+            mode: "a+r"
+        - name: Add Helm apt repository
+          apt_repository:
+            repo: "deb [arch={{ deb_architecture[ansible_architecture] }} signed-by=/etc/apt/keyrings/helm.asc] https://baltocdn.com/helm/stable/debian/ all main"
+            filename: helm-stable-debian
+            state: present
+        - name: Install Helm
+          apt:
+            name: helm
+            state: present
+            update_cache: true
+        - name: Add Helm nvidia k8s-device-plugin repository
+          command: helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
+        - name: Update helm repo
+          command: helm repo update
+
     - name: Install nvidia driver
       block:
         - name: Install nvidia driver
@@ -169,7 +191,7 @@
           register: install_driver
         - name: Reboot the machine to load nvidia driver
           reboot: # no args needed
-          when: install_driver.changed
+          # when: install_driver.changed # commented to always reboot, just to be safe
         - name: Generate X config
           command: nvidia-xconfig --preserve-busid --enable-all-gpus
         - name: Get nvidia gpg key
@@ -192,9 +214,24 @@
           systemd_service:
             name: containerd
             state: restarted
-        - name: Enable k8s-device-plugin daemon set
-          command: kubectl create -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.16.2/deployments/static/nvidia-device-plugin.yml
-
+        - name: Ensure k8s-device-plugin config file
+          copy:
+            dest: /tmp/nvidia-device-plugin-config.yml
+            content: |
+              version: v1
+              sharing:
+                mps:
+                  resources:
+                  - name: nvidia.com/gpu
+                    replicas: 2
+        - name: Install k8s-device-plugin daemon set
+          shell: |
+            helm upgrade -i nvdp nvdp/nvidia-device-plugin \
+                --version=0.16.2 \
+                --namespace nvidia-device-plugin \
+                --create-namespace \
+                --set gfd.enabled=true \
+                --set-file config.map.config=/tmp/nvidia-device-plugin-config.yml
         - name: Install utils and X dev files
           apt:
             name:
