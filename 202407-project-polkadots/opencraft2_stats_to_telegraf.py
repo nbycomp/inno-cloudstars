@@ -22,7 +22,7 @@ def read_last_line(filename):
     return (first_line, last_line)
 
 if __name__ == "__main__":
-    filename = "/mnt/c/Users/micro/repos/Opencraft-2/Builds/logs/opencraft2_client_stats.csv"
+    filename = "/opencraft2/logs/opencraft2_client_stats.csv"
     first_line, last_line = read_last_line(filename)
     headers = first_line.strip().lower().replace(" ", "_").split(";")
     data = last_line.strip().split(";")
