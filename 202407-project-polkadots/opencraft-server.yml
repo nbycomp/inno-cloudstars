@@ -36,6 +36,6 @@ spec:
       volumes:
         - name: logs-volume
           hostPath:
-            path: /logs
+            path: /var/log/opencraft
             type: DirectoryOrCreate
       restartPolicy: Never
