@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import glob
 
 # https://stackoverflow.com/a/73195814
 def read_last_line(filename):
@@ -22,11 +23,13 @@ def read_last_line(filename):
     return (first_line, last_line)
 
 if __name__ == "__main__":
-    filename = "/opencraft2/logs/opencraft2_client_stats.csv"
-    first_line, last_line = read_last_line(filename)
-    headers = first_line.strip().lower().replace(" ", "_").split(";")
-    data = last_line.strip().split(";")
-    output = "opencraft2_stats"
-    for i in range(len(headers)):
-        output += f" {headers[i]}={data[i]}i"
-    print(output)
+    stat_files = glob.glob("/opencraft2/logs/*.csv")
+    for filename in stat_files:
+        measurement_name = filename.split("/")[-1].split(".")[0]
+        first_line, last_line = read_last_line(filename)
+        headers = first_line.strip().lower().replace(" ", "_").split(";")
+        data = last_line.strip().split(";")
+        output = measurement_name
+        for i in range(len(headers)):
+            output += f" {headers[i]}={data[i]}i"
+        print(output)
