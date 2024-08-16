@@ -397,6 +397,9 @@
                 token: adminadmin # same as password for simplicity
               persistence:
                 enabled: false
+              service:
+                type: NodePort
+                nodePort: 31337
         - name: Deploy InfluxDB StatefulSet
           command: helm upgrade --install -f /tmp/influxdb-helm-values-override.yml -n monitoring influxdb influxdata/influxdb2
         - name: Create file with value overrides for Telegraf Helm chart
