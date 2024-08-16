@@ -14,7 +14,7 @@ spec:
             - "-playType"
             - "Server"
             - "-serverUrl"
-            - "0.0.0.0" # FIXME this needs to point to the server instance
+            - "0.0.0.0"
             - "-nographics"
             - "-batchmode"
             - "-logFile"
@@ -33,9 +33,19 @@ spec:
           volumeMounts:
             - mountPath: /opencraft2/logs
               name: logs-volume
+        - name: telegraf
+          image: jdonkervliet/telegraf-python
+          volumeMounts:
+            - mountPath: /etc/telegraf/telegraf.conf
+              name: telegraf-config-volume
+            - mountPath: /opencraft2/logs
+              name: logs-volume
       volumes:
         - name: logs-volume
           hostPath:
             path: /var/log/opencraft
             type: DirectoryOrCreate
+        - name: telegraf-config-volume
+          configMap:
+            name: telegraf-config
       restartPolicy: Never
