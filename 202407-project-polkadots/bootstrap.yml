@@ -249,7 +249,7 @@
           command: kubectl create namespace monitoring
 
         - name: Create file with value overrides for InfluxDB Helm chart
-          file:
+          copy:
             dest: /tmp/influxdb-helm-values-override.yml
             content: |
               # we don't spend a single second on security
@@ -264,7 +264,7 @@
         - name: Deploy InfluxDB StatefulSet
           command: helm upgrade --install -f /tmp/influxdb-helm-values-override.yml -n monitoring influxdb influxdata/influxdb2
         - name: Create file with value overrides for Telegraf Helm chart
-          file:
+          copy:
             dest: /tmp/telegraf-helm-values-override.yml
             content: |
                 config:
