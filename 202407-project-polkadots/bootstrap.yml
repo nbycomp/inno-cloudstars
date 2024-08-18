@@ -191,7 +191,7 @@
           register: install_driver
         - name: Reboot the machine to load nvidia driver
           reboot: # no args needed
-          # when: install_driver.changed # commented to always reboot, just to be safe
+          when: install_driver.changed # comment to always reboot, just to be safe
         - name: Generate X config
           command: nvidia-xconfig --preserve-busid --enable-all-gpus
         - name: Get nvidia gpg key
