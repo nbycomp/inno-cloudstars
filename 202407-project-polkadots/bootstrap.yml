@@ -290,3 +290,12 @@
           shell: |
             nohup X &> /dev/null &
           when: pgrep_x.rc == 1
+
+    - name: Opencraft
+      block:
+        - name: Copy Opencraft k8s files
+          copy:
+            src: opencraft-k8s/
+            dest: /opencraft/
+        - name: Make a ConfigMap for the Opencraft Telegraf sidecar
+          command: kubectl create configmap telegraf-sidecar-config --from-file=/opencraft/telegraf.conf
