@@ -10,6 +10,7 @@ spec:
       containers:
         - name: opencraft-renderer
           image: jdonkervliet/opencraft
+          command: ["/opencraft2/opencraft2.x86_64"]
           args:
             - "-playType"
             - "Client"

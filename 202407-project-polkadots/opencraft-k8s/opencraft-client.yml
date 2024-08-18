@@ -10,6 +10,7 @@ spec:
       containers:
         - name: opencraft-client
           image: jdonkervliet/opencraft
+          command: ["/opencraft2/opencraft2.x86_64"]
           args:
             - "-playType"
             - "SimulatedClient"
