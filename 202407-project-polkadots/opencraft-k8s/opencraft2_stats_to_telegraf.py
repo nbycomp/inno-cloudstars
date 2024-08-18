@@ -27,9 +27,12 @@ if __name__ == "__main__":
     for filename in stat_files:
         measurement_name = filename.split("/")[-1].split(".")[0]
         first_line, last_line = read_last_line(filename)
-        headers = first_line.strip().lower().replace(" ", "_").split(";")
-        data = last_line.strip().split(";")
+        headers = first_line.strip().strip(";").lower().replace(" ", "_").split(";")
+        data = last_line.strip().strip(";").split(";")
         output = measurement_name
         for i in range(len(headers)):
-            output += f" {headers[i]}={data[i]}i"
+            if i == 0:
+                output += f" {headers[i]}={data[i]}i"
+            else:
+                output += f",{headers[i]}={data[i]}i"
         print(output)

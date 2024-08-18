@@ -1,12 +1,38 @@
-apiVersion: batch/v1
-kind: Job
+apiVersion: v1
+kind: Service
 metadata:
   name: opencraft-server
   labels:
-    app.kubernetes.io/name: opencraft-server
+    app: opencraft-server
 spec:
+  ports:
+  - port: 7979
+    protocol: UDP
+    name: game-state
+  - port: 7980
+    protocol: UDP
+    name: deployment
+  clusterIP: None
+  selector:
+    app: opencraft-server
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: opencraft-server
+spec:
+  selector:
+    matchLabels:
+      app: opencraft-server # has to match .spec.template.metadata.labels
+  serviceName: "opencraft-server"
+  replicas: 1 # by default is 1
+  minReadySeconds: 10 # by default is 0
   template:
+    metadata:
+      labels:
+        app: opencraft-server # has to match .spec.selector.matchLabels
     spec:
+      terminationGracePeriodSeconds: 10
       containers:
         - name: opencraft
           image: jdonkervliet/opencraft
@@ -41,6 +67,8 @@ spec:
               name: telegraf-sidecar-config-volume
             - mountPath: /opencraft2/logs
               name: logs-volume
+            - mountPath: /opencraft2_stats_to_telegraf.py
+              name: telegraf-exec-opencraft-stats
       volumes:
         - name: logs-volume
           hostPath:
@@ -49,4 +77,9 @@ spec:
         - name: telegraf-sidecar-config-volume
           configMap:
             name: telegraf-sidecar-config
-      restartPolicy: Never
+        - name: telegraf-exec-opencraft-stats
+          hostPath:
+            path: /opencraft/opencraft2_stats_to_telegraf.py
+            type: File
+
+

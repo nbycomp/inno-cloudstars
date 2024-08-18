@@ -297,5 +297,9 @@
           copy:
             src: opencraft-k8s/
             dest: /opencraft/
+        - name: Make telegraf input script executable
+          file:
+            path: /opencraft/opencraft2_stats_to_telegraf.py
+            mode: "+x"
         - name: Make a ConfigMap for the Opencraft Telegraf sidecar
           command: kubectl create configmap telegraf-sidecar-config --from-file=/opencraft/telegraf.conf
