@@ -73,8 +73,6 @@ spec:
               name: telegraf-sidecar-config-volume
             - mountPath: /opencraft2/logs
               name: logs-volume
-            - mountPath: /opencraft2_stats_to_telegraf.py
-              name: telegraf-exec-opencraft-stats
       volumes:
         - name: logs-volume
           hostPath:
@@ -83,9 +81,3 @@ spec:
         - name: telegraf-sidecar-config-volume
           configMap:
             name: telegraf-sidecar-config
-        - name: telegraf-exec-opencraft-stats
-          hostPath:
-            path: /opencraft/opencraft2_stats_to_telegraf.py
-            type: File
-
-
