@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
         - name: opencraft-thinclient
-          image: jdonkervliet/opencraft
+          image: jdonkervliet/opencraft:v0.0.7
           command: ["/opencraft2/opencraft2.x86_64"]
           args:
             - "-playType"
@@ -26,6 +26,8 @@ spec:
             - "-logStats"
             - "-statsFile"
             - "/opencraft2/logs/opencraft2_thinclient_stats.csv"
+            - "-statsHttpUrl"
+            - "http://localhost:8080/telegraf"
           volumeMounts:
             - mountPath: /opencraft2/logs
               name: logs-volume
