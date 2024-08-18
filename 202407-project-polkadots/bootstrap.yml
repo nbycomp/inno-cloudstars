@@ -267,7 +267,7 @@
           copy:
             dest: /tmp/telegraf-helm-values-override.yml
             content: |
-                config:
+              config:
                 outputs:
                   - influxdb_v2:
                       urls:
