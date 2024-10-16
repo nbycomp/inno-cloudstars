@@ -38,6 +38,7 @@ spec:
           image: jdonkervliet/opencraft-client-unity:latest
           args:
             - "-logfile"
+            - "/opencraft/logs/render.log"
           ports:
             - name: control-server
               containerPort: 7980
