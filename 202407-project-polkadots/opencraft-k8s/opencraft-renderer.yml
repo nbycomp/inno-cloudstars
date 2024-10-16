@@ -37,10 +37,10 @@ spec:
         - name: opencraft-render
           image: jdonkervliet/opencraft-client-unity:latest
           ports:
-            - name: http-control-server
+            - name: control-server
               containerPort: 7980
               protocol: TCP
-            - name: signaling-server
+            - name: signal-server
               containerPort: 7981
               protocol: TCP
           volumeMounts:
