@@ -24,7 +24,7 @@ spec:
   ports:
     - port: 7979 # Port on the service within the cluster
       targetPort: 7979 # Port on the container within the pod
-      nodePort: 37979 # NodePort that will be exposed externally (range 30000-32767)
+      nodePort: 30979 # NodePort that will be exposed externally (range 30000-32767)
 ---
 apiVersion: apps/v1
 kind: StatefulSet
