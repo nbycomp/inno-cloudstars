@@ -1,45 +1,58 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: opencraft-render-nodeport-service
+spec:
+  type: NodePort # Exposes the service externally via a port on each node
+  selector:
+    app: opencraft-render
+  ports:
+    - name: http-control-server
+      port: 7980
+      targetPort: 7980
+      nodePort: 30980
+    - name: signaling-server
+      port: 7981
+      targetPort: 7981
+      nodePort: 30981
+    - name: coturn-listener
+      port: 3478
+      targetPort: 3478
+      nodePort: 30982
+    - name: stream
+      port: 7983
+      targetPort: 7983
+      nodePort: 30983
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: opencraft-renderer
+  name: opencraft-render
   labels:
-    app.kubernetes.io/name: opencraft-renderer
+    app.kubernetes.io/name: opencraft-render
 spec:
   template:
     spec:
       containers:
-        - name: opencraft-renderer
-          image: jdonkervliet/opencraft:v0.0.7
-          command: ["/opencraft2/opencraft2.x86_64"]
-          args:
-            - "-playType"
-            - "Client"
-            - "-multiplayRole"
-            - "CloudHost"
-            - "-signalingUrl"
-            - "some-url" # FIXME this should point to the signaling server
-            - "-iceServerUrl"
-            - "stun:stun.l.google.com:19302"
-            - "-iceServerUrl"
-            - "turn:the-other-container-in-this-pod:3478" # FIXME how to connect these two things?
-            - "-logFile"
-            - "/opencraft2/logs/opencraft2_renderer_log.txt"
-            - "-profiler-enable"
-            - "-logStats"
-            - "-statsFile"
-            - "/opencraft2/logs/opencraft2_renderer_stats.csv"
-            - "-statsHttpUrl"
-            - "http://localhost:8080/telegraf"
+        - name: opencraft-render
+          image: jdonkervliet/opencraft-client-unity:latest
+          ports:
+            - name: http-control-server
+              containerPort: 7980
+              protocol: TCP
+            - name: signaling-server
+              containerPort: 7981
+              protocol: TCP
           volumeMounts:
-            - mountPath: /opencraft2/logs
+            - mountPath: /opencraft/logs
               name: logs-volume
         - name: turn-server
           image: coturn/coturn
           args:
             - "--min-port"
-            - "49610"
+            - "30983"
             - "--max-port"
-            - "49610"
+            - "30983"
           ports:
             - containerPort: 3478
               protocol: TCP
@@ -49,7 +62,10 @@ spec:
               protocol: TCP
             - containerPort: 5349
               protocol: UDP
-            - containerPort: 49160
+            - name: stream
+              containerPort: 30983
+              protocol: TCP
+            - containerPort: 30983
               protocol: UDP
       volumes:
         - name: logs-volume
