@@ -47,11 +47,22 @@ spec:
               containerPort: 7981
               protocol: TCP
           env:
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: "all"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: "compute,video,graphics" # Add the graphics capability here
             - name: DISPLAY
               value: ":0"
+          resources:
+            limits:
+              nvidia.com/gpu: 1 # requesting 1 GPU
           volumeMounts:
+            - mountPath: /tmp/.X11-unix
+              name: unix-display
             - mountPath: /opencraft/logs
               name: logs-volume
+          securityContext:
+            privileged: true
         - name: turn-server
           image: coturn/coturn
           args:
@@ -73,7 +84,14 @@ spec:
               protocol: TCP
             - containerPort: 30983
               protocol: UDP
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
       volumes:
+        - name: unix-display
+          hostPath:
+            path: /tmp/.X11-unix
         - name: logs-volume
           hostPath:
             path: /logs
