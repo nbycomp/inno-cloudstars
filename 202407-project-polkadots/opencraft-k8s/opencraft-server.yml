@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: opencraft-server
+  name: opencraft-server-headless-service
   labels:
     app: opencraft-server
 spec:
@@ -12,6 +12,19 @@ spec:
   clusterIP: None
   selector:
     app: opencraft-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: opencraft-server-nodeport-service
+spec:
+  type: NodePort # Exposes the service externally via a port on each node
+  selector:
+    app: opencraft-server
+  ports:
+    - port: 7979 # Port on the service within the cluster
+      targetPort: 7979 # Port on the container within the pod
+      nodePort: 37979 # NodePort that will be exposed externally (range 30000-32767)
 ---
 apiVersion: apps/v1
 kind: StatefulSet
