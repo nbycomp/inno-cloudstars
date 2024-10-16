@@ -46,6 +46,9 @@ spec:
             - name: signal-server
               containerPort: 7981
               protocol: TCP
+          env:
+            - name: DISPLAY
+              value: ":0"
           volumeMounts:
             - mountPath: /opencraft/logs
               name: logs-volume
