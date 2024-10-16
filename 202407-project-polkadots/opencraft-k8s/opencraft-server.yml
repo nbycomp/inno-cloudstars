@@ -6,12 +6,9 @@ metadata:
     app: opencraft-server
 spec:
   ports:
-  - port: 7979
-    protocol: UDP
-    name: game-state
-  - port: 7980
-    protocol: UDP
-    name: deployment
+    - port: 7979
+      protocol: UDP
+      name: game-state
   clusterIP: None
   selector:
     app: opencraft-server
@@ -35,32 +32,29 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: opencraft
-          image: jdonkervliet/opencraft:v0.0.7
-          command: ["/opencraft2/opencraft2.x86_64"]
-          args:
-            - "-playType"
-            - "Server"
-            - "-serverUrl"
-            - "0.0.0.0"
-            - "-nographics"
-            - "-batchmode"
-            - "-logFile"
-            - "/opencraft2/logs/opencraft2_server_log.txt"
-            - "-profiler-enable"
-            - "-logStats"
-            - "-statsFile"
-            - "/opencraft2/logs/opencraft2_server_stats.csv"
-            - "-statsHttpUrl"
-            - "http://localhost:8080/telegraf"
+          image: jdonkervliet/opencraft-server-go:latest
+          # command: ["/opencraft2/opencraft2.x86_64"]
+          # args:
+          #   - "-playType"
+          #   - "Server"
+          #   - "-serverUrl"
+          #   - "0.0.0.0"
+          #   - "-nographics"
+          #   - "-batchmode"
+          #   - "-logFile"
+          #   - "/opencraft2/logs/opencraft2_server_log.txt"
+          #   - "-profiler-enable"
+          #   - "-logStats"
+          #   - "-statsFile"
+          #   - "/opencraft2/logs/opencraft2_server_stats.csv"
+          #   - "-statsHttpUrl"
+          #   - "http://localhost:8080/telegraf"
           ports:
             - containerPort: 7979
               name: game-state
               protocol: UDP
-            - containerPort: 7980
-              name: deployment
-              protocol: UDP
           volumeMounts:
-            - mountPath: /opencraft2/logs
+            - mountPath: /opencraft/logs
               name: logs-volume
         - name: telegraf
           image: jdonkervliet/telegraf-python
