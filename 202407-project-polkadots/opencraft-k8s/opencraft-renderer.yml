@@ -73,6 +73,7 @@ spec:
           image: coturn/coturn
           args:
             - "-n" # no config file, use these parameters
+            - "--no-cli"
             - "--min-port"
             - "30983"
             - "--max-port"
