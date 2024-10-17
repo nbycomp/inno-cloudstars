@@ -102,4 +102,3 @@ spec:
           hostPath:
             path: /logs
             type: DirectoryOrCreate
-      restartPolicy: Never
