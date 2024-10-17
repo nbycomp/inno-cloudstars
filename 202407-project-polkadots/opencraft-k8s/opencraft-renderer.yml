@@ -72,11 +72,16 @@ spec:
         - name: turn-server
           image: coturn/coturn
           args:
+            - "-n" # no config file, use these parameters
             - "--min-port"
             - "30983"
             - "--max-port"
             - "30983"
             - "--log-file=stdout"
+            - "-v" # verbose
+            - "-z" # allow anonymous
+            - "--allow-loopback-peers" # not good for security
+            - "--no-multicast-peers"
           env:
             - name: DETECT_EXTERNAL_IP
               value: "yes"
