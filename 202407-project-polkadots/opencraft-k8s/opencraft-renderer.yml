@@ -78,7 +78,7 @@ spec:
             - "30983"
           env:
             - name: DETECT_EXTERNAL_IP
-              value: yes
+              value: "yes"
           ports:
             - containerPort: 3478
               protocol: TCP
