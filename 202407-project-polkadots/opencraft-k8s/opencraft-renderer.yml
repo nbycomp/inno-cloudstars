@@ -76,6 +76,7 @@ spec:
             - "30983"
             - "--max-port"
             - "30983"
+            - "--log-file=stdout"
           env:
             - name: DETECT_EXTERNAL_IP
               value: "yes"
