@@ -79,6 +79,8 @@ spec:
           env:
             - name: DETECT_EXTERNAL_IP
               value: "yes"
+            - name: DETECT_RELAY_IP
+              value: "yes"
           ports:
             - containerPort: 3478
               protocol: TCP
