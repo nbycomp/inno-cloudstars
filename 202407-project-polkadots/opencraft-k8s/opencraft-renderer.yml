@@ -24,14 +24,20 @@ spec:
       targetPort: 7983
       nodePort: 30983
 ---
-apiVersion: batch/v1
-kind: Job
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
   name: opencraft-render
-  labels:
-    app.kubernetes.io/name: opencraft-render
 spec:
+  selector:
+    matchLabels:
+      app: opencraft-render # has to match .spec.template.metadata.labels
+  serviceName: "opencraft-render"
+  replicas: 1 # by default is 1
   template:
+    metadata:
+      labels:
+        app: opencraft-render # has to match .spec.selector.matchLabels
     spec:
       containers:
         - name: opencraft-render
