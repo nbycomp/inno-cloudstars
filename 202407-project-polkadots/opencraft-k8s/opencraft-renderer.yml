@@ -20,8 +20,8 @@ spec:
       targetPort: 3478
       nodePort: 30982
     - name: stream
-      port: 7983
-      targetPort: 7983
+      port: 30983
+      targetPort: 30983
       nodePort: 30983
 ---
 apiVersion: apps/v1
@@ -76,6 +76,9 @@ spec:
             - "30983"
             - "--max-port"
             - "30983"
+          env:
+            - name: DETECT_EXTERNAL_IP
+              value: yes
           ports:
             - containerPort: 3478
               protocol: TCP
