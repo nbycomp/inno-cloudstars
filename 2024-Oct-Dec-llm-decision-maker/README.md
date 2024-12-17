@@ -1,6 +1,4 @@
-Here’s a well-structured and clear `README.md` for your project:
 
----
 
 # **LLM Decision Maker for NearbyOne**
 
