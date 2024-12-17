@@ -1,0 +1,7 @@
+requests
+pyyaml
+argparse
+streamlit
+transformers
+torch
+sentence_transformers

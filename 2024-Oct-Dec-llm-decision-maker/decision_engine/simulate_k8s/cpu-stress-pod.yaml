@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cpu-stress-pod
+spec:
+  containers:
+  - name: stress-ng
+    image: polinux/stress
+    args:
+    - "--cpu"
+    - "32" # Increase to 32 workers
+    - "--timeout"
+    - "1800s" # Run for 30 minutes

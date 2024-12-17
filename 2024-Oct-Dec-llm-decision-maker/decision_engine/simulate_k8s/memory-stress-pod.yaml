@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: memory-stress-pod
+spec:
+  containers:
+  - name: stress-ng
+    image: polinux/stress
+    args:
+    - "--vm"
+    - "16" # Increase memory workers
+    - "--vm-bytes"
+    - "2G" # Allocate 2GB per worker
+    - "--timeout"
+    - "1800s" # Run for 30 minutes

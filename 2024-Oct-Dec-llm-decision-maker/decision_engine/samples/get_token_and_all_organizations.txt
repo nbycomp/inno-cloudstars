@@ -1,0 +1,30 @@
+Session Token: ory_st_VzGPXbNHWWeBIpnH5lWvqAsjN006lJOz
+Response: [{'id': 'e9742c04-413e-45b7-993e-15cae91cb4bf', 'displayName': 'CloudStars', 'description': 'Cloud Open Source Research Mobility Network ', 'sites': ['bf0a43c9-b400-4fe7-af21-33995fef86db', 'ea18ad85-cd9a-42bd-ad45-e299aa99eb69', 'ea218760-f57f-4986-9102-9763c6dad3db', 'fb20faeb-6add-402a-bd8d-842c599d36ba'], 'device_metas': [{'id': 'ba134cf8-e366-46a5-84a9-b738f5362408', 'type': 'CLOUDLET'}, {'id': 'cfb120ec-939e-4ce9-a45b-e7f7a8cf0013', 'type': 'CLOUDLET'}, {'id': 'd363ec2b-686a-49a3-a90f-402922407318', 'type': 'CLOUDLET'}]}]
+Response:
+[
+    {
+        "id": "e9742c04-413e-45b7-993e-15cae91cb4bf",
+        "displayName": "CloudStars",
+        "description": "Cloud Open Source Research Mobility Network ",
+        "sites": [
+            "bf0a43c9-b400-4fe7-af21-33995fef86db",
+            "ea18ad85-cd9a-42bd-ad45-e299aa99eb69",
+            "ea218760-f57f-4986-9102-9763c6dad3db",
+            "fb20faeb-6add-402a-bd8d-842c599d36ba"
+        ],
+        "device_metas": [
+            {
+                "id": "ba134cf8-e366-46a5-84a9-b738f5362408",
+                "type": "CLOUDLET"
+            },
+            {
+                "id": "cfb120ec-939e-4ce9-a45b-e7f7a8cf0013",
+                "type": "CLOUDLET"
+            },
+            {
+                "id": "d363ec2b-686a-49a3-a90f-402922407318",
+                "type": "CLOUDLET"
+            }
+        ]
+    }
+]

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpu-stress-deployment
+spec:
+  replicas: 10 # Increase the number of replicas for more stress
+  selector:
+    matchLabels:
+      app: cpu-stress
+  template:
+    metadata:
+      labels:
+        app: cpu-stress
+    spec:
+      containers:
+      - name: stress-ng
+        image: polinux/stress
+        args:
+        - "--cpu"
+        - "8"
+        - "--timeout"
+        - "600s"

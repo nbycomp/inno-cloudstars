@@ -1,0 +1,62 @@
+Block:
+  InstanceId: 12345678-9012-3456-7890-123456789012
+connections:
+  prometheusQueries:
+    configuration:
+      prometheus:
+        address: http://thanos-aeon-zero:9090
+        insecure:
+          enabled: true
+        query: desired_replicas
+    variables:
+      connName: desired-replicas
+      labels:
+        query: toyNginx-desired-replicas
+deployments:
+  toyNGINX:
+    configuration:
+      chart:
+        auth:
+          enabled: true
+          password: iS<!S_8so16H-3k6igIXwI*N8nwL%r=4
+          secret:
+            key: secretKey
+            name: chart-secret
+          username: robot$adv5g-twins
+        baseRegistryUrl: registry.nearbycomputing.com
+        name: toy-nginx-closed-loop
+        repo: chartrepo/adv5g-twins-apps
+        version: 0.0.1
+    values:
+      nginxApplication:
+        image:
+          pullPolicy: Always
+          repository: nginx
+          tag: latest
+        nodeIP: 10.201.0.196
+        replicaCount: 1
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        service:
+          nodePort: 30050
+          type: NodePort
+      nginxPrometheusExporter:
+        image:
+          pullPolicy: Always
+          repository: nginx/nginx-prometheus-exporter
+          tag: latest
+        replicaCount: 1
+        service:
+          port: 9113
+        servicemonitor:
+          interval: 30s
+    variables:
+      appname: toyNGINX
+placement:
+  site:
+    label: site01

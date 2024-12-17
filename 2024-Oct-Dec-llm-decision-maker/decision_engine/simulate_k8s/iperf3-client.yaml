@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: iperf3-client
+spec:
+  containers:
+  - name: iperf3-client
+    image: networkstatic/iperf3
+    args:
+    - "-c"
+    - "iperf3-server" # Replace with server IP/hostname if needed
+    - "-t"
+    - "60" # Duration in seconds

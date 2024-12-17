@@ -1,0 +1,12 @@
+{
+  "cpu_usage": "rate(node_cpu_seconds_total[5m])",
+  "memory_usage": "node_memory_Active_bytes / node_memory_MemTotal_bytes",
+  "disk_io": "rate(node_disk_io_time_seconds_total[5m])",
+  "network_throughput": "rate(node_network_receive_bytes_total[5m])",
+  "pod_cpu_usage": "sum(rate(container_cpu_usage_seconds_total[5m])) by (pod)",
+  "pod_memory_usage": "sum(container_memory_usage_bytes) by (pod)",
+  "pod_restarts": "kube_pod_container_status_restarts_total",
+  "node_memory_usage": "sum(container_memory_usage_bytes{container!=\"\"}) by (node)",
+  "cpu_capacity": "sum(machine_cpu_cores) by (node)",
+  "memory_capacity": "sum(machine_memory_bytes) by (node)"
+}

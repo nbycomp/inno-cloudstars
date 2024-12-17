@@ -1,0 +1,27 @@
+name: "NBI API Test Script - NginxSimpleContainer"
+blocks:
+  - display_name: "Sample Nginx Container Application from bitnami"
+    block_chart_name: "NginxSimpleContainer"
+    block_chart_version: "0.1.0"
+    site_id: "eb0e3eaa-b668-4ad6-bc10-2bb0eb7da259"
+    values: |
+      Block:
+        InstanceId: "12345678-9012-3456-7890-123456789012"
+      deployments:
+        nginx:
+          configuration:
+            chart:
+              baseRegistryUrl: "charts.bitnami.com"
+              name: "nginx"
+              repo: "bitnami"
+              version: "13.2.19"
+          values:
+            service:
+              httpsPort: 999
+              port: 99
+              type: "NodePort"
+          variables:
+            appname: "nginx"
+      placement:
+        site:
+          label: "f0f802ff-1888-46d5-931b-16897c3f1de7"

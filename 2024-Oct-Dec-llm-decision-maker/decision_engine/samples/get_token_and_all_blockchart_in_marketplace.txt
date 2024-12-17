@@ -1,0 +1,46 @@
+Session Token: ory_st_WvdjdqjDuzAYOFokpKxpGu75srdiKGK3
+Response: {'charts': [{'id': '12ddff283e539eab33480557a8af31d43db3e1f3b60fdb08a2298225438ca0ba', 'name': 'NginxSimpleContainer', 'display_name': 'Sample Nginx Container Application from bitnami', 'description': 'NGINX is a free, open-source, high-performance HTTP server and reverse proxy, as well as an IMAP/POP3 proxy server. NGINX is known for its high performance, stability, rich feature set, simple configuration, and low resource consumption. NGINX is one of a handful of servers written to address the C10K problem.', 'vendor': 'Nginx', 'categories': ['Examples'], 'all_versions': ['0.1.0']}, {'id': '93a870eac9403743e31956318012d13f261715bcc99c8ba940c73c18159de4bf', 'name': 'ObserveeMonitoringBlock', 'display_name': 'Observee Monitoring Block', 'description': 'Deploys the observability stack tools to an Observee cluster to be observed by an Observer.', 'vendor': 'Nearby Computing', 'categories': ['Observability'], 'all_versions': ['0.0.9']}, {'id': '7acc837012a2529ec6319daed37b56a0f6eda0df1ff53bc11f68f22f42b18451', 'name': 'ObserverMonitoringBlock', 'display_name': 'Observer Monitoring Block', 'description': 'Deploys the observability stack tools to an Observer cluster to be aggregating metrics from Observees.', 'vendor': 'Nearby Computing', 'categories': ['Observability'], 'all_versions': ['0.0.9']}]}
+Response:
+{
+    "charts": [
+        {
+            "id": "12ddff283e539eab33480557a8af31d43db3e1f3b60fdb08a2298225438ca0ba",
+            "name": "NginxSimpleContainer",
+            "display_name": "Sample Nginx Container Application from bitnami",
+            "description": "NGINX is a free, open-source, high-performance HTTP server and reverse proxy, as well as an IMAP/POP3 proxy server. NGINX is known for its high performance, stability, rich feature set, simple configuration, and low resource consumption. NGINX is one of a handful of servers written to address the C10K problem.",
+            "vendor": "Nginx",
+            "categories": [
+                "Examples"
+            ],
+            "all_versions": [
+                "0.1.0"
+            ]
+        },
+        {
+            "id": "93a870eac9403743e31956318012d13f261715bcc99c8ba940c73c18159de4bf",
+            "name": "ObserveeMonitoringBlock",
+            "display_name": "Observee Monitoring Block",
+            "description": "Deploys the observability stack tools to an Observee cluster to be observed by an Observer.",
+            "vendor": "Nearby Computing",
+            "categories": [
+                "Observability"
+            ],
+            "all_versions": [
+                "0.0.9"
+            ]
+        },
+        {
+            "id": "7acc837012a2529ec6319daed37b56a0f6eda0df1ff53bc11f68f22f42b18451",
+            "name": "ObserverMonitoringBlock",
+            "display_name": "Observer Monitoring Block",
+            "description": "Deploys the observability stack tools to an Observer cluster to be aggregating metrics from Observees.",
+            "vendor": "Nearby Computing",
+            "categories": [
+                "Observability"
+            ],
+            "all_versions": [
+                "0.0.9"
+            ]
+        }
+    ]
+}

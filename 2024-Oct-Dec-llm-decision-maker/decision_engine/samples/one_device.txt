@@ -1,0 +1,22 @@
+Session Token: ory_st_vcIV7GzRqvHccrfq3q9tFab8tF47zNtw
+Response: {'device': {'id': 'ba134cf8-e366-46a5-84a9-b738f5362408', 'tags': [{'key': 'cloudlet', 'value': 'present'}], 'displayName': 'k8s-sepi-edge2', 'position': {'lat': 41.39599070884438, 'lng': 2.151878898056225}, 'status': 'Unknown', 'site': 'ea18ad85-cd9a-42bd-ad45-e299aa99eb69', 'org': 'e9742c04-413e-45b7-993e-15cae91cb4bf'}}
+Response:
+{
+    "device": {
+        "id": "ba134cf8-e366-46a5-84a9-b738f5362408",
+        "tags": [
+            {
+                "key": "cloudlet",
+                "value": "present"
+            }
+        ],
+        "displayName": "k8s-sepi-edge2",
+        "position": {
+            "lat": 41.39599070884438,
+            "lng": 2.151878898056225
+        },
+        "status": "Unknown",
+        "site": "ea18ad85-cd9a-42bd-ad45-e299aa99eb69",
+        "org": "e9742c04-413e-45b7-993e-15cae91cb4bf"
+    }
+}

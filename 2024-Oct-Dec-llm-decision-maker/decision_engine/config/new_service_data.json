@@ -1,0 +1,12 @@
+{
+    "name": "sepideh-34",
+    "blocks": [
+        {
+            "displayName": "sepideh-34",
+            "blockChartName": "NginxSimpleContainer",
+            "blockChartVersion": "0.1.0",
+            "site_id": "fb20faeb-6add-402a-bd8d-842c599d36ba",
+            "values": "Block:\n  InstanceId: 12345678-9012-3456-7890-123456789012\ndeployments:\n  nginx:\n    configuration:\n      chart:\n        baseRegistryUrl: charts.bitnami.com\n        name: nginx\n        repo: bitnami\n        version: 13.2.19\n    values:\n      service:\n        httpsPort: 443\n        port: 80\n        type: NodePort\n    variables:\n      appname: nginx\nplacement:\n  site:\n    label: fb20faeb-6add-402a-bd8d-842c599d36ba\n"
+        }
+    ]
+}

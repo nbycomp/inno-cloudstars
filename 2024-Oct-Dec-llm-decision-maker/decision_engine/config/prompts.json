@@ -1,0 +1,34 @@
+{
+    "email_validation": "Is '{email}' a valid email address? Respond with 'Yes' or 'No'.",
+    "available_services": "You are provided with marketplace data: {data}. Extract all service names as a JSON array. Respond with: [\"service1\", \"service2\", ...].",
+    "extract_intent": "You are an assistant that extracts the user's intent.\n\nUser Input: \"{user_input}\"\n\nAvailable Services: {services_str}\n\nInstructions:\n- Determine if the user wants to \"deploy\" or \"delete\" a service.\n- Identify the service name, correcting any typos to match the closest service in the available services.\n- If you correct a typo, suggest the corrected service name.\n\nRespond in JSON format:\n{{\n    \"intent\": \"deploy\" or \"delete\",\n    \"service\": \"corrected service name\",\n    \"suggestion\": \"Did you mean 'corrected service name'?\"\n}}\n\nIf you cannot determine the intent or the service, set their values to null.",
+    "extract_sites": {
+        "prompt": "Given the following data about sites and devices: {data}. Extract each site with associated devices in JSON format: [ {{ \"site_id\": \"site1\", \"site_name\": \"site_name1\", \"devices\": [\"device1\"], \"has_device\": true }}, ... ]",
+        "function_schema": {
+            "name": "store_sites_devices",
+            "description": "Stores sites and devices information",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "sites": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "site_id": {"type": "string"},
+                                "site_name": {"type": "string"},
+                                "devices": {
+                                    "type": "array",
+                                    "items": {"type": "string"}
+                                },
+                                "has_device": {"type": "boolean"}
+                            },
+                            "required": ["site_id", "site_name", "has_device"]
+                        }
+                    }
+                },
+                "required": ["sites"]
+            }
+        }
+    }
+}
