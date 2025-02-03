@@ -62,7 +62,7 @@ python -m pip install -r requirements.txt
 
 Start the demo using Streamlit:  
 ```bash
-streamlit run decision_engine/demo/deploy_demo.py
+streamlit run decision_engine/demo/demo_app.py
 ```
 
 ---
