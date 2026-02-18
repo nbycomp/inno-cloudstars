@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Node
+metadata:
+  name: __NODE_NAME__
+  annotations:
+    kwok.x-k8s.io/node: fake
+    metrics.k8s.io/resource-metrics-path: "/metrics/nodes/__NODE_NAME__/metrics/resource"
+  labels:
+    type: kwok
+    kwok-node-type: light
+    kubernetes.io/os: linux
+    kubernetes.io/arch: amd64
+    node-role.kubernetes.io/worker: ""
+spec:
+  taints:
+  - key: kwok.x-k8s.io/fake
+    value: "true"
+    effect: NoSchedule
+status:
+  addresses:
+  - type: Hostname
+    address: __NODE_NAME__
+  capacity:
+    cpu: "10"
+    memory: "30Gi"
+    pods: "200"
+  allocatable:
+    cpu: "10"
+    memory: "30Gi"
+    pods: "200"
+  conditions:
+  - type: Ready
+    status: "True"
+    reason: "KWOKReady"
+    message: "Simulated node by KWOK"
+  nodeInfo:
+    architecture: amd64
+    operatingSystem: linux
+    kubeletVersion: "kwok"

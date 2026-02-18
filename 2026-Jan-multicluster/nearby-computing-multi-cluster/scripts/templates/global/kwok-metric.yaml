@@ -1,0 +1,61 @@
+apiVersion: kwok.x-k8s.io/v1alpha1
+kind: Metric
+metadata:
+  name: metrics-resource-global
+spec:
+  path: /metrics/nodes/{nodeName}/metrics/resource
+  metrics:
+  - dimension: container
+    kind: counter
+    name: container_cpu_usage_seconds_total
+    labels:
+    - name: container
+      value: container.name
+    - name: namespace
+      value: pod.metadata.namespace
+    - name: pod
+      value: pod.metadata.name
+    value: pod.CumulativeUsage("cpu", container.name)
+  - dimension: container
+    kind: gauge
+    name: container_memory_working_set_bytes
+    labels:
+    - name: container
+      value: container.name
+    - name: namespace
+      value: pod.metadata.namespace
+    - name: pod
+      value: pod.metadata.name
+    value: pod.Usage("memory", container.name)
+  - dimension: pod
+    kind: counter
+    name: pod_cpu_usage_seconds_total
+    labels:
+    - name: namespace
+      value: pod.metadata.namespace
+    - name: pod
+      value: pod.metadata.name
+    value: pod.CumulativeUsage("cpu")
+  - dimension: pod
+    kind: gauge
+    name: pod_memory_working_set_bytes
+    labels:
+    - name: namespace
+      value: pod.metadata.namespace
+    - name: pod
+      value: pod.metadata.name
+    value: pod.Usage("memory")
+  - dimension: node
+    kind: counter
+    name: node_cpu_usage_seconds_total
+    labels:
+    - name: node
+      value: node.metadata.name
+    value: node.CumulativeUsage("cpu")
+  - dimension: node
+    kind: gauge
+    name: node_memory_working_set_bytes
+    labels:
+    - name: node
+      value: node.metadata.name
+    value: node.Usage("memory")

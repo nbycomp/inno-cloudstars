@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulation-mid
+  namespace: nearby-computing-app
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: simulation
+      tier: mid
+  template:
+    metadata:
+      labels:
+        app: simulation
+        tier: mid
+      annotations:
+        kwok.x-k8s.io/usage-cpu: "300m"
+        kwok.x-k8s.io/usage-memory: "300Mi"
+    spec:
+      nodeSelector:
+        type: kwok
+      tolerations:
+      - key: "kwok.x-k8s.io/node"
+        operator: "Equal"
+        value: "fake"
+        effect: "NoSchedule"
+      containers:
+      - name: c
+        image: registry.k8s.io/pause:3.9
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"

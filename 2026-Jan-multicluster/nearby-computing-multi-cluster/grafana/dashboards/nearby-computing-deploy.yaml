@@ -1,0 +1,437 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "graphTooltip": 1,
+  "panels": [
+    {
+      "datasource": "${DS}",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "mcores",
+          "min": 0
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "orientation": "horizontal",
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "sum(\n  count by (deployment) (\n    label_replace(\n      pod_cpu_usage_seconds_total{job=\"kwok-controller-metrics-discovery\",metrics_name=\"metrics-resource\",namespace=\"$namespace\",pod=~\"simulation-(light|mid|heavy)-.*\"},\n      \"deployment\",\"simulation-$1\",\"pod\",\"simulation-(light|mid|heavy)-.*\"\n    )\n  )\n  * on(deployment) group_left()\n  (\n    label_replace(vector(1500),\"deployment\",\"simulation-heavy\",\"\",\"\")\n    or label_replace(vector(300),\"deployment\",\"simulation-mid\",\"\",\"\")\n    or label_replace(vector(10),\"deployment\",\"simulation-light\",\"\",\"\")\n  )\n)",
+          "refId": "A"
+        }
+      ],
+      "title": "Cluster Total CPU (defined, mCores)",
+      "type": "stat"
+    },
+
+    {
+      "datasource": "${DS}",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "orientation": "horizontal",
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "sum(\n  count by (deployment) (\n    label_replace(\n      pod_cpu_usage_seconds_total{job=\"kwok-controller-metrics-discovery\",metrics_name=\"metrics-resource\",namespace=\"$namespace\",pod=~\"simulation-(light|mid|heavy)-.*\"},\n      \"deployment\",\"simulation-$1\",\"pod\",\"simulation-(light|mid|heavy)-.*\"\n    )\n  )\n  * on(deployment) group_left()\n  (\n    label_replace(vector(6442450944),\"deployment\",\"simulation-heavy\",\"\",\"\")\n    or label_replace(vector(314572800),\"deployment\",\"simulation-mid\",\"\",\"\")\n    or label_replace(vector(41943040),\"deployment\",\"simulation-light\",\"\",\"\")\n  )\n)",
+          "refId": "A"
+        }
+      ],
+      "title": "Cluster Total Memory (defined, bytes)",
+      "type": "stat"
+    },
+
+    {
+      "datasource": "${DS}",
+      "description": "Current pod count per deployment (stable existence based on pod_cpu_usage_seconds_total).",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "min": 0,
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 70 },
+              { "color": "red", "value": 90 }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "simulation-heavy" },
+            "properties": [
+              { "id": "max", "value": 30 },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "orange", "value": 21 },
+                    { "color": "red", "value": 27 }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "simulation-mid" },
+            "properties": [
+              { "id": "max", "value": 50 },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "orange", "value": 35 },
+                    { "color": "red", "value": 45 }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "simulation-light" },
+            "properties": [
+              { "id": "max", "value": 100 },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "orange", "value": 70 },
+                    { "color": "red", "value": 90 }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 6 },
+      "id": 3,
+      "options": {
+        "displayMode": "basic",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "targets": [
+        {
+          "expr": "count by (deployment) (\n  label_replace(\n    pod_cpu_usage_seconds_total{job=\"kwok-controller-metrics-discovery\",metrics_name=\"metrics-resource\",namespace=\"$namespace\",pod=~\"simulation-(light|mid|heavy)-.*\"},\n    \"deployment\",\"simulation-$1\",\"pod\",\"simulation-(light|mid|heavy)-.*\"\n  )\n)",
+          "legendFormat": "{{deployment}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Pods (current) by deployment",
+      "type": "bargauge"
+    },
+
+    {
+      "datasource": "${DS}",
+      "description": "CPU computed from pod definitions: pods * tier_cpu_mcores.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "mcores",
+          "min": 0,
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 70 },
+              { "color": "red", "value": 90 }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "simulation-heavy" },
+            "properties": [
+              { "id": "max", "value": 45000 },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "orange", "value": 31500 },
+                    { "color": "red", "value": 40500 }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "simulation-mid" },
+            "properties": [
+              { "id": "max", "value": 15000 },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "orange", "value": 10500 },
+                    { "color": "red", "value": 13500 }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "simulation-light" },
+            "properties": [
+              { "id": "max", "value": 1000 },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "orange", "value": 700 },
+                    { "color": "red", "value": 900 }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 6 },
+      "id": 4,
+      "options": {
+        "displayMode": "basic",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "targets": [
+        {
+          "expr": "count by (deployment) (\n  label_replace(\n    pod_cpu_usage_seconds_total{job=\"kwok-controller-metrics-discovery\",metrics_name=\"metrics-resource\",namespace=\"$namespace\",pod=~\"simulation-(light|mid|heavy)-.*\"},\n    \"deployment\",\"simulation-$1\",\"pod\",\"simulation-(light|mid|heavy)-.*\"\n  )\n)\n* on(deployment) group_left()\n(\n  label_replace(vector(1500),\"deployment\",\"simulation-heavy\",\"\",\"\")\n  or label_replace(vector(300),\"deployment\",\"simulation-mid\",\"\",\"\")\n  or label_replace(vector(10),\"deployment\",\"simulation-light\",\"\",\"\")\n)",
+          "legendFormat": "{{deployment}}",
+          "refId": "A"
+        }
+      ],
+      "title": "CPU (current, defined mCores) by deployment",
+      "type": "bargauge"
+    },
+
+    {
+      "datasource": "${DS}",
+      "description": "Memory computed from pod definitions: pods * tier_mem_bytes.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0,
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 70 },
+              { "color": "red", "value": 90 }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "simulation-heavy" },
+            "properties": [
+              { "id": "max", "value": 193273528320 },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "orange", "value": 135291469824 },
+                    { "color": "red", "value": 173946175488 }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "simulation-mid" },
+            "properties": [
+              { "id": "max", "value": 15728640000 },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "orange", "value": 11010048000 },
+                    { "color": "red", "value": 14155776000 }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "simulation-light" },
+            "properties": [
+              { "id": "max", "value": 4194304000 },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "orange", "value": 2936012800 },
+                    { "color": "red", "value": 3774873600 }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 6 },
+      "id": 5,
+      "options": {
+        "displayMode": "basic",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "targets": [
+        {
+          "expr": "count by (deployment) (\n  label_replace(\n    pod_cpu_usage_seconds_total{job=\"kwok-controller-metrics-discovery\",metrics_name=\"metrics-resource\",namespace=\"$namespace\",pod=~\"simulation-(light|mid|heavy)-.*\"},\n    \"deployment\",\"simulation-$1\",\"pod\",\"simulation-(light|mid|heavy)-.*\"\n  )\n)\n* on(deployment) group_left()\n(\n  label_replace(vector(6442450944),\"deployment\",\"simulation-heavy\",\"\",\"\")\n  or label_replace(vector(314572800),\"deployment\",\"simulation-mid\",\"\",\"\")\n  or label_replace(vector(41943040),\"deployment\",\"simulation-light\",\"\",\"\")\n)",
+          "legendFormat": "{{deployment}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Memory (current, defined bytes) by deployment",
+      "type": "bargauge"
+    },
+
+    {
+      "datasource": "${DS}",
+      "fieldConfig": {
+        "defaults": { "unit": "mcores", "min": 0 },
+        "overrides": []
+      },
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 14 },
+      "id": 6,
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "single" }
+      },
+      "targets": [
+        {
+          "expr": "count by (deployment) (\n  label_replace(\n    pod_cpu_usage_seconds_total{job=\"kwok-controller-metrics-discovery\",metrics_name=\"metrics-resource\",namespace=\"$namespace\",pod=~\"simulation-(light|mid|heavy)-.*\"},\n    \"deployment\",\"simulation-$1\",\"pod\",\"simulation-(light|mid|heavy)-.*\"\n  )\n)\n* on(deployment) group_left()\n(\n  label_replace(vector(1500),\"deployment\",\"simulation-heavy\",\"\",\"\")\n  or label_replace(vector(300),\"deployment\",\"simulation-mid\",\"\",\"\")\n  or label_replace(vector(10),\"deployment\",\"simulation-light\",\"\",\"\")\n)",
+          "legendFormat": "{{deployment}}",
+          "refId": "A"
+        }
+      ],
+      "title": "CPU by deployment (defined mCores)",
+      "type": "timeseries"
+    },
+
+    {
+      "datasource": "${DS}",
+      "fieldConfig": {
+        "defaults": { "unit": "bytes", "min": 0 },
+        "overrides": []
+      },
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 14 },
+      "id": 7,
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "single" }
+      },
+      "targets": [
+        {
+          "expr": "count by (deployment) (\n  label_replace(\n    pod_cpu_usage_seconds_total{job=\"kwok-controller-metrics-discovery\",metrics_name=\"metrics-resource\",namespace=\"$namespace\",pod=~\"simulation-(light|mid|heavy)-.*\"},\n    \"deployment\",\"simulation-$1\",\"pod\",\"simulation-(light|mid|heavy)-.*\"\n  )\n)\n* on(deployment) group_left()\n(\n  label_replace(vector(6442450944),\"deployment\",\"simulation-heavy\",\"\",\"\")\n  or label_replace(vector(314572800),\"deployment\",\"simulation-mid\",\"\",\"\")\n  or label_replace(vector(41943040),\"deployment\",\"simulation-light\",\"\",\"\")\n)",
+          "legendFormat": "{{deployment}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Memory by deployment (defined bytes)",
+      "type": "timeseries"
+    },
+
+    {
+      "datasource": "${DS}",
+      "fieldConfig": { "defaults": { "unit": "none", "min": 0 }, "overrides": [] },
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 24 },
+      "id": 8,
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "single" }
+      },
+      "targets": [
+        {
+          "expr": "count by (deployment) (\n  label_replace(\n    pod_cpu_usage_seconds_total{job=\"kwok-controller-metrics-discovery\",metrics_name=\"metrics-resource\",namespace=\"$namespace\",pod=~\"simulation-(light|mid|heavy)-.*\"},\n    \"deployment\",\"simulation-$1\",\"pod\",\"simulation-(light|mid|heavy)-.*\"\n  )\n)",
+          "legendFormat": "{{deployment}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Pods by deployment (count)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": ["kwok", "workload", "nearby-computing-app", "simulation"],
+  "templating": {
+    "list": [
+      { "type": "datasource", "name": "DS", "label": "Prometheus datasource", "query": "prometheus", "refresh": 1 },
+      {
+        "type": "query",
+        "name": "namespace",
+        "label": "Namespace",
+        "datasource": "${DS}",
+        "query": { "query": "label_values(pod_cpu_usage_seconds_total, namespace)", "refId": "ns" },
+        "refresh": 1,
+        "current": { "selected": true, "text": "nearby-computing-app", "value": "nearby-computing-app" }
+      }
+    ]
+  },
+  "time": { "from": "now-1h", "to": "now" },
+  "timezone": "browser",
+  "title": "CloudStars KWOK Workload – Defined Pods/CPU/Memory + Per-Deployment Limits",
+  "version": 1
+}

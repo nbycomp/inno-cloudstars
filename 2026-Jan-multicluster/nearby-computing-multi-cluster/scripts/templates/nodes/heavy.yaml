@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Node
+metadata:
+  name: __NODE_NAME__
+  annotations:
+    kwok.x-k8s.io/node: fake
+    # Optional: allow metrics-server to scrape kwok resource metrics for this node (common kwok pattern)
+    metrics.k8s.io/resource-metrics-path: "/metrics/nodes/__NODE_NAME__/metrics/resource"
+  labels:
+    type: kwok
+    kwok-node-type: heavy
+    kubernetes.io/os: linux
+    kubernetes.io/arch: amd64
+    node-role.kubernetes.io/worker: ""
+spec:
+  # Taint to ensure only pods that tolerate it can run here
+  taints: # Avoid scheduling actual running pods to fake Node unless tolerated
+  - effect: NoSchedule
+    key: kwok.x-k8s.io/node
+    value: fake
+status:
+  addresses:
+  - type: Hostname
+    address: __NODE_NAME__
+  capacity:
+    cpu: "100"           # or 10 for light
+    memory: "1Ti"        # or 30Gi for light
+    pods: "1100"         # or 200 for light
+  allocatable:
+    cpu: "100"
+    memory: "1Ti"
+    pods: "1100"
+  conditions:
+  - type: Ready
+    status: "True"
+    reason: "KWOKReady"
+    message: "Simulated node by KWOK"
+  nodeInfo:
+    architecture: amd64
+    operatingSystem: linux
+    kubeletVersion: "kwok"

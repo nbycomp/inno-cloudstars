@@ -1,0 +1,24 @@
+#cloud-config
+package_update: true
+packages:
+  - ca-certificates
+  - curl
+  - jq
+  - unzip
+
+write_files:
+  - path: /usr/local/bin/bootstrap-kwok-host.sh
+    permissions: "0755"
+    owner: root:root
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+      exec > >(tee -a /var/log/bootstrap-kwok-host.log) 2>&1
+
+      echo "[host] starting bootstrap"
+
+      echo "[host] bootstrap complete (runtime/tools installed later)."
+      echo "[host] done"
+
+runcmd:
+  - [ bash, -lc, "/usr/local/bin/bootstrap-kwok-host.sh" ]

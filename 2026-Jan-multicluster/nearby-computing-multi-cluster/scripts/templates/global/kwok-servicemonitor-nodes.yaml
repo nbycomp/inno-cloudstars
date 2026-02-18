@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kwok-metrics-nodes
+  namespace: observability
+  labels:
+    release: kube-prom-stack
+spec:
+  namespaceSelector:
+    matchNames: ["kube-system"]
+  selector:
+    matchLabels:
+      app: kwok-metrics
+  endpoints:
+  - port: http
+    interval: 5s
+    honorLabels: true
+    relabelings:
+    - sourceLabels: [__meta_kubernetes_service_label_kwok_node]
+      targetLabel: __metrics_path__
+      regex: (.+)
+      replacement: /metrics/nodes/$1/metrics/resource
+
