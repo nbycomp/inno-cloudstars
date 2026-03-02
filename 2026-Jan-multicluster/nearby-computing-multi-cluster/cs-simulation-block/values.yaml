@@ -1,0 +1,182 @@
+Block:
+  InstanceId: # set it to your instance id data
+placement:
+  site:
+    label: # set to your site label
+
+deployments:
+  csApp:
+    variables:
+      appname: cs-simulation-app # change this to your app name
+    configuration:
+      chart:
+        repo:  # change this to your repo
+        version: 0.1.0 # change this to your chart version
+        name: cs-simulation-app   # change this to your chart name
+        auth:
+          enabled: true
+          username: "" # change this to your account
+          password: "" # change this to your account password
+          secret:
+            name: chart-secret
+            key: secretKey
+    values:
+        # Default values for nbc-simulation.
+
+        # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+        replicaCount: 1
+
+        # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
+        image:
+          repository: registry.k8s.io/pause
+          # This sets the pull policy for images.
+          pullPolicy: IfNotPresent
+          # Overrides the image tag whose default is the chart appVersion.
+          tag: "3.9"
+
+        # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+        imagePullSecrets: []
+        # This is to override the chart name.
+        nameOverride: "simulation"
+        fullnameOverride: ""
+        namespace: nearby-computing-app
+
+        # Tiered deployments
+        tiers:
+          light:
+            enabled: true
+            replicas: 5
+            annotations:
+              kwok.x-k8s.io/usage-cpu: "2m"
+              kwok.x-k8s.io/usage-memory: "40Mi"
+            resources:
+              requests:
+                cpu: "10m"
+                memory: "32Mi"
+              limits:
+                cpu: "50m"
+                memory: "64Mi"
+            hpa:
+              enabled: true
+              minReplicas: 5
+              maxReplicas: 100
+              behavior:
+                scaleUp:
+                  stabilizationWindowSeconds: 0
+                  policies:
+                    - type: Percent
+                      value: 200
+                      periodSeconds: 15
+                    - type: Pods
+                      value: 50
+                      periodSeconds: 15
+                  selectPolicy: Max
+                scaleDown:
+                  stabilizationWindowSeconds: 0
+                  policies:
+                    - type: Percent
+                      value: 100
+                      periodSeconds: 15
+                    - type: Pods
+                      value: 50
+                      periodSeconds: 15
+                  selectPolicy: Max
+              metrics:
+                cpuAverageValue: "5m"
+          mid:
+            enabled: true
+            replicas: 5
+            annotations:
+              kwok.x-k8s.io/usage-cpu: "300m"
+              kwok.x-k8s.io/usage-memory: "300Mi"
+            resources:
+              requests:
+                cpu: "200m"
+                memory: "256Mi"
+              limits:
+                cpu: "500m"
+                memory: "512Mi"
+          heavy:
+            enabled: true
+            replicas: 5
+            annotations:
+              kwok.x-k8s.io/usage-cpu: "1500m"
+              kwok.x-k8s.io/usage-memory: "6Gi"
+            affinity:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                    - matchExpressions:
+                        - key: kwok-node-type
+                          operator: In
+                          values: ["heavy"]
+            resources:
+              requests:
+                cpu: "2"
+                memory: "2Gi"
+              limits:
+                cpu: "8"
+                memory: "8Gi"
+
+        # Common pod scheduling settings
+        common:
+          nodeSelector:
+            type: kwok
+          tolerations:
+            - key: "kwok.x-k8s.io/node"
+              operator: "Equal"
+              value: "fake"
+              effect: "NoSchedule"
+
+
+        # This is for setting Kubernetes Annotations to a Pod.
+        # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+        podAnnotations: {}
+        # This is for setting Kubernetes Labels to a Pod.
+        # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+        podLabels: {}
+
+        podSecurityContext: {}
+          # fsGroup: 2000
+
+        securityContext: {}
+          # capabilities:
+          #   drop:
+          #   - ALL
+          # readOnlyRootFilesystem: true
+          # runAsNonRoot: true
+          # runAsUser: 1000
+
+
+
+        resources: {}
+          # We usually recommend not to specify default resources and to leave this as a conscious
+          # choice for the user. This also increases chances charts run on environments with little
+          # resources, such as Minikube. If you do want to specify resources, uncomment the following
+          # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+          # limits:
+          #   cpu: 100m
+          #   memory: 128Mi
+          # requests:
+          #   cpu: 100m
+          #   memory: 128Mi
+
+
+        # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
+        autoscaling:
+          enabled: false
+          minReplicas: 1
+          maxReplicas: 100
+          targetCPUUtilizationPercentage: 80
+          # targetMemoryUtilizationPercentage: 80
+
+        # Additional volumes on the output Deployment definition.
+        volumes: []
+
+        volumeMounts: []
+
+        nodeSelector: {}
+        tolerations: []
+        affinity: {}
+
+      

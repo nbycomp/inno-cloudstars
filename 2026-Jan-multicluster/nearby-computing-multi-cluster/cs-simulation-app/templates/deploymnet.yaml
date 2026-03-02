@@ -1,0 +1,48 @@
+{{- $root := . -}}
+{{- range $tierName, $tier := .Values.tiers }}
+{{- if $tier.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "simulation.fullname" $root }}-{{ $tierName }}
+  namespace: {{ $root.Values.namespace | quote }}
+  labels:
+    {{- include "simulation.labels" $root | nindent 4 }}
+    tier: {{ $tierName | quote }}
+spec:
+  replicas: {{ $tier.replicas }}
+  selector:
+    matchLabels:
+      app: simulation
+      tier: {{ $tierName | quote }}
+  template:
+    metadata:
+      labels:
+        app: simulation
+        tier: {{ $tierName | quote }}
+      {{- with $tier.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with $root.Values.common.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $tier.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $root.Values.common.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: c
+          image: "{{ $root.Values.image.repository }}:{{ $root.Values.image.tag }}"
+          imagePullPolicy: {{ $root.Values.image.pullPolicy }}
+          resources:
+            {{- toYaml $tier.resources | nindent 12 }}
+---
+{{- end }}
+{{- end }}

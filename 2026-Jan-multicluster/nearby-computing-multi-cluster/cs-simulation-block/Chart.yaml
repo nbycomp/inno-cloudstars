@@ -1,0 +1,21 @@
+apiVersion: v2
+name: cs-simulation-block
+description: "Sample application deployed on the simulated calusters. Consist of 3 deployments
+              each one simulating a different tier of the application: light, medium, heavy.
+              Each deployment has different resource requests and limits to simulate different
+              workloads on the cluster."
+type: application
+version: 0.0.1
+appVersion: 1.0.0
+maintainers:
+  - name: Marek Konieczny
+    email: # maintainer email
+    url: www.nearbycomputing.com
+keywords:
+# categories
+  - Examples
+icon: https://raw.githubusercontent.com/marekko/startup/refs/heads/master/cloud-stars.jpg
+deprecated: false
+annotations:
+  vendor: Clouds Stars Project
+  displayName: Sample Cloud Stars Simulation Application Block

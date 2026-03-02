@@ -1,0 +1,28 @@
+apiVersion: blocks/v1beta1
+kind: ChartDeployment
+metadata:
+  name: cs-simulation-app
+  namespace: {{ .Values.Block.InstanceId }}
+spec:
+  template:
+    metadata:
+      labels:
+        application: {{ .Values.deployments.csApp.variables.appname }}-{{ .Values.Block.InstanceId }}
+
+    spec:
+      k8sClusterSelector:
+        matchLabels:
+          site.nbycomp.com/{{ .Values.placement.site.label }}: "true"
+      chart: {{ .Values.deployments.csApp.configuration.chart.name }}
+      version: {{ .Values.deployments.csApp.configuration.chart.version }}
+      namespaceOverride: requirednamespace
+      repo:
+        url: {{ .Values.deployments.csApp.configuration.chart.repo }}
+        username: {{ .Values.deployments.csApp.configuration.chart.auth.username }}
+        password:
+          secretKeyRef:
+            name: # fill the values
+            key: # fill the values
+      values: |
+{{ toYaml .Values.deployments.csApp.values | indent 8 }}
+

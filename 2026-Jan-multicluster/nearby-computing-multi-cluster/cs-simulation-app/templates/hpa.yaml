@@ -1,0 +1,31 @@
+{{- $root := . -}}
+{{- $tiers := .Values.tiers | default dict -}}
+{{- $light := (index $tiers "light") | default dict -}}
+{{- $hpa := (index $light "hpa") | default dict -}}
+{{- $lightEnabled := (index $light "enabled") | default false -}}
+{{- $hpaEnabled := (index $hpa "enabled") | default false -}}
+{{- if and $lightEnabled $hpaEnabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "simulation.fullname" $root }}-light-hpa
+  namespace: {{ $root.Values.namespace | quote }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "simulation.fullname" $root }}-light
+  minReplicas: {{ $hpa.minReplicas }}
+  maxReplicas: {{ $hpa.maxReplicas }}
+  {{- with $hpa.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: AverageValue
+          averageValue: {{ $hpa.metrics.cpuAverageValue | quote }}
+{{- end }}
