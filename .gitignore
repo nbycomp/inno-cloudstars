@@ -1,1 +1,23 @@
 .DS_Store
+# 2026-Jan-multicluster runtime artifacts
+2026-Jan-multicluster/nearby-computing-multi-cluster/inventory/*
+!2026-Jan-multicluster/nearby-computing-multi-cluster/inventory/.gitkeep
+2026-Jan-multicluster/nearby-computing-multi-cluster/kubeconfigs/*
+!2026-Jan-multicluster/nearby-computing-multi-cluster/kubeconfigs/.gitkeep
+2026-Jan-multicluster/nearby-computing-multi-cluster/logs/*
+!2026-Jan-multicluster/nearby-computing-multi-cluster/logs/.gitkeep
+
+# Terraform local state/secrets
+2026-Jan-multicluster/nearby-computing-multi-cluster/terraform/.terraform/
+2026-Jan-multicluster/nearby-computing-multi-cluster/terraform/*.tfstate
+2026-Jan-multicluster/nearby-computing-multi-cluster/terraform/*.tfstate.*
+2026-Jan-multicluster/nearby-computing-multi-cluster/terraform/terraform.tfvars
+2026-Jan-multicluster/nearby-computing-multi-cluster/terraform/terraform.tfvars.json
+2026-Jan-multicluster/nearby-computing-multi-cluster/terraform/crash.log
+2026-Jan-multicluster/nearby-computing-multi-cluster/terraform/override.tf
+2026-Jan-multicluster/nearby-computing-multi-cluster/terraform/override.tf.json
+2026-Jan-multicluster/nearby-computing-multi-cluster/terraform/*_override.tf
+2026-Jan-multicluster/nearby-computing-multi-cluster/terraform/*_override.tf.json
+
+# Generated Grafana datasource
+2026-Jan-multicluster/nearby-computing-multi-cluster/grafana/provisioning/datasources/kwok-prometheus.yaml
