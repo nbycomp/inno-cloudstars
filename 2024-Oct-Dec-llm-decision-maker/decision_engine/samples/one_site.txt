@@ -1,4 +1,4 @@
-Session Token: ory_st_bTQaR3a1D8z97mhwvU3cfi6XShpIiXaQ
+Session Token: <session-token>
 Response: {'site': {'id': 'ea18ad85-cd9a-42bd-ad45-e299aa99eb69', 'displayName': 'Sepideh-Laptop-Edge2', 'description': ''}}
 Response:
 {
